@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.crm.dao.ModelMapper">
+ 
+ 
+	<!-- 按条件分页查询模块数据信息 -->
+	<select id="selectModelAll" parameterType="fenye" resultType="Model">
+		SELECT m_id,m_name,m_parentId,m_path,m_weight,m_weitghtDescribe,m_ops
+		 FROM Model
+		<!--  limit #{page},#{pageSize} -->
+	</select>
+	<!-- 查询模块数据信息总条数  -->
+	<select id="selectModelCount"   resultType="_int">
+		SELECT count(m_id) FROM Model
+	</select>
+	 
+	<!-- 删除模块信息 -->
+	<delete id="deleteModel" parameterType="Model">
+		delete from Model
+			<where>
+				<if test="m_id !=null and m_id !=''">
+					m_id=#{m_id}
+				</if>
+			</where>
+	</delete>
+	 
+	<!--修改模块信息  -->
+	<update id="updateModelAll" parameterType="Model">
+		update Model
+			<set>
+				<if test="  != null and   !=''"> =#{}</if>
+			</set>
+				<where>
+				<if test="m_id !=null and m_id !=''">
+					m_id=#{m_id}
+				</if>
+				</where>
+	</update> 
+	<!-- 新增模块信息 -->
+	<insert id="insertModel" parameterType="Model">
+		insert into Model(m_name,m_parentId,m_path,m_weight,m_weitghtDescribe,m_ops)
+		values()
+	</insert>
+	
+	
+</mapper>
