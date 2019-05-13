@@ -11,10 +11,31 @@
 <script type="text/javascript" src=js/jquery-easyui-1.4.3/jquery.easyui.min.js></script>  
 <script type="text/javascript" src="js/jquery-easyui-1.4.3/locale/easyui-lang-zh_CN.js"></script>  
 <script type="text/javascript">
-
+$(function(){
+	init();
+})
+function init(){ 
+	$('#tt').tree({    
+	    url: "showmodel",
+	    method:"post",
+	   /*  loadFilter: function(data){    
+	        if (data.d){    
+	            return data.d;    
+	        } else {    
+	            return data;    
+	        }    
+	    }  */   
+	});  
+}
 </script>
 </head>
 <body>
+<div>
+
+<ul id="tt"  ></ul>  
+</div>
+
+
 
 </body>
 </html>

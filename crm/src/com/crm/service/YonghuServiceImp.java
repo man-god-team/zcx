@@ -49,6 +49,12 @@ public class YonghuServiceImp implements YonghuService{
 		return yonghuMapper.updateYonghujiesoByisLockout(yonghu);
 	}
 
+	@Override
+	public Integer updateYonghuReset(Yonghu yonghu) {
+		// TODO Auto-generated method stub
+		return yonghuMapper.updateYonghuReset(yonghu);
+	}
+
 	 
 
 }

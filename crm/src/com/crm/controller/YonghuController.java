@@ -1,5 +1,6 @@
 package com.crm.controller;
  
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import com.crm.entity.Fenye;
 import com.crm.entity.Yonghu;
 import com.crm.service.YonghuService;
 import com.crm.service.YonghuServiceImp;
+import com.crm.util.MD5Util;
 
 @Controller
 public class YonghuController {
@@ -35,7 +37,9 @@ public class YonghuController {
 		fenye.setY_isLockout(y_isLockout);
 		fenye.setPage((page-1)*rows);
 		fenye.setPageSize(rows);
+		
 		List<Yonghu> selectYonghuAll = YonghuServiceImp.selectYonghuAll(fenye);
+		
 		Integer selectYonghuCount = YonghuServiceImp.selectYonghuCount();
 		fenye.setRows(selectYonghuAll);
 		fenye.setTotal(selectYonghuCount);
@@ -61,6 +65,16 @@ public class YonghuController {
 	@RequestMapping(value=("/addYonghu"),method=RequestMethod.POST)
 	@ResponseBody
 	public Integer addYonghu(Yonghu yonghu) {
+		
+		Date myDate = new Date(); 
+		System.out.println(myDate.toLocaleString());
+		yonghu.setY_createTime(myDate.toLocaleString());
+		yonghu.setY_lastLoginTime(myDate.toLocaleString());
+		yonghu.setY_resetPassword("ysd123");
+		yonghu.setY_pasdWrongShu(0); 
+		yonghu.setY_weight(1);
+		/* String md5 = MD5Util.string2MD5(yonghu.getY_password()); */
+		 
 		 System.out.println(yonghu);
 		return YonghuServiceImp.insertYonghu(yonghu);
 	}
@@ -68,8 +82,17 @@ public class YonghuController {
 	@RequestMapping(value=("/updateYonghu"),method=RequestMethod.POST)
 	@ResponseBody
 	public Integer updateYonghu(Yonghu yonghu) {
+		Date myDate = new Date(); 
+		System.out.println(myDate.toLocaleString());
+		yonghu.setY_lastLoginTime(myDate.toLocaleString());
 		 System.out.println(yonghu);
+	 
 		return YonghuServiceImp.updateYonghu(yonghu);
 	}
-
+//	÷ÿ÷√√‹¥a 
+	@RequestMapping(value=("/ResetYonghu"),method=RequestMethod.POST)
+	@ResponseBody
+	public Integer ResetYonghu(Yonghu yonghu) { 
+		return YonghuServiceImp.updateYonghuReset(yonghu);
+	}
 }

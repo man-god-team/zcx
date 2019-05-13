@@ -17,7 +17,7 @@ public class ModelController {
 	@Autowired
 	private ModelService modelService;
 //	²éÔƒÄ£¿é”µ“þï@Ê¾
-	@RequestMapping(value=("/showmodel"),method=RequestMethod.GET)
+	@RequestMapping(value=("/showmodel"),method=RequestMethod.POST)
 	@ResponseBody 
 	public Fenye<Model> showmodel() {
 		Fenye<Model> fenye=new Fenye<Model>();

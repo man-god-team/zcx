@@ -1,6 +1,8 @@
 package com.crm.entity;
 
-public class Yonghu {
+import com.crm.util.MD5Util;
+
+public class Yonghu extends MD5Util{
 	private Integer y_id;
 	private String y_name;
 	private String y_password;
@@ -13,9 +15,10 @@ public class Yonghu {
 	private Integer y_weight;
 	private String y_yanzhengma;
 	private String y_resetPassword;
+	 
 	
 	public String getY_resetPassword() {
-		return y_resetPassword;
+		return string2MD5(y_resetPassword);
 	}
 	public void setY_resetPassword(String y_resetPassword) {
 		this.y_resetPassword = y_resetPassword;
@@ -36,7 +39,7 @@ public class Yonghu {
 		return y_password;
 	}
 	public void setY_password(String y_password) {
-		this.y_password = y_password;
+		this.y_password = MD5Util.string2MD5(y_password);
 	}
 	public String getY_email() {
 		return y_email;

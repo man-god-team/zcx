@@ -36,6 +36,14 @@ function init(){
 function suodingy_isLockout(value,rows,index){
 	return rows.y_isLockout==1 ? "锁定":"未锁定"
 }
+function shezhi(value,row,index){
+	return '<a href="javascript:void(0)" class="easyui-linkbutton"  onclick="ShezhiYonghu('+index+')">設置用户角色</a>  '
+}
+/* 設置用戶角色  */
+function ShezhiYonghu(index){
+	var y_id=$("#dg").datagrid('getData').rows[index].y_id;
+	$('#win2').window('open');
+}
 function suoding(value,row,index){
 	return '<a href="javascript:void(0)" class="easyui-linkbutton"  onclick="suodingYonghu('+index+')">锁定用户</a>   <a href="javascript:void(0)" class="easyui-linkbutton"  onclick="jiesuoYonghu('+index+')">解锁用户 </a>'
 }
@@ -60,7 +68,7 @@ function jiesuoYonghu(index){
 	var y_id=$("#dg").datagrid('getData').rows[index].y_id;
 	var y_isLockout=$("#dg").datagrid('getData').rows[index].y_isLockout;
 	if(y_isLockout==1){
-		$.post("jiesuoYonghu",{y_id:y_id,y_isLockout:0},function(res){
+		$.post("jiesuoYonghu",{y_id:y_id,y_isLockout:2},function(res){
 			if(res>0){
 				$('#dg').datagrid('reload');  
 				$.messager.alert("提示","用户解锁成功");
@@ -74,7 +82,20 @@ function jiesuoYonghu(index){
 	
 }
 function caozuo(value,row,index){
-	return '<a href="javascript:void(0)" class="easyui-linkbutton"  onclick="editYonghu('+index+')">修改</a>   <a href="javascript:void(0)" class="easyui-linkbutton"  onclick="deleteYonghu('+index+')">删除 </a>'
+	return '<a href="javascript:void(0)" class="easyui-linkbutton"  onclick="editYonghu('+index+')">修改</a>  <a href="javascript:void(0)" class="easyui-linkbutton"  onclick="Re_PasswordYonghu('+index+')">重置密碼</a>  <a href="javascript:void(0)" class="easyui-linkbutton"  onclick="deleteYonghu('+index+')">删除 </a>'
+}
+function Re_PasswordYonghu(index){
+	var rows=$("#dg").datagrid('getData').rows[index];
+	var y_resetPassword=rows.y_resetPassword;
+	var y_id=rows.y_id;
+	$.post("ResetYonghu",{ y_resetPassword:y_resetPassword,y_id:y_id},function(res){
+		if(res>0){
+			$('#dg').datagrid('reload');  
+			$.messager.alert("提示","密碼重置成功");
+		}else{
+			$.messager.alert("提示","密碼重置失败");
+		}
+	})
 }
 function editYonghu(index){
 	 
@@ -84,7 +105,7 @@ function editYonghu(index){
 	$("#win1").window('open');
 }
 function editYonghu1(){
-	 $.post("updateYonghu",{ y_name:$("#y_name2").val(),y_email:$("#y_email2").val(),y_tel:$("#y_tel2").val(),y_id:$("#y_id2").val()},function(res){
+	 $.post("updateYonghu",{ y_name:$("#y_name2").val(),y_email:$("#y_email2").validatebox(),y_tel:$("#y_tel2").val(),y_id:$("#y_id2").val()},function(res){
 			if(res>0){
 				$('#dg').datagrid('reload');  
 				$('#win1').window('close'); 
@@ -96,7 +117,7 @@ function editYonghu1(){
 	
 }
 function deleteYonghu(index){
-	var y_id=$("#dg").datagrid('getData').rows[index].y_id;
+	var y_id=$("#dg").datagrid('getData').rows[index].y_id; 
 	$.post("deleteYonghu",{y_id:y_id},function(res){
 		if(res>0){
 			$('#dg').datagrid('reload');  
@@ -111,7 +132,7 @@ function addFrom(){
 }
 function addYonghu(){
 	
-	 $.post("addYonghu",{ y_name:$("#y_name1").val(),y_password:$("#y_password1").val(),y_email:$("#y_email1").val(),y_tel:$("#y_tel1").val()},function(res){
+	 $.post("addYonghu",{ y_name:$("#y_name1").val(),y_password:$("#y_password1").val(),y_email:$("#y_email1").validatebox(),y_tel:$("#y_tel1").val()},function(res){
 			if(res>0){
 				$('#dg').datagrid('reload'); 
 				$("#ff").form("clear");
@@ -140,9 +161,10 @@ function addYonghu(){
             <th data-options="field:'y_isLockout',formatter:suodingy_isLockout">是否锁定</th>
             <th data-options="field:'y_resetPassword'">重置密码</th>  
             <th data-options="field:'y_weight'">权重（权限）</th> 
-            <th data-options="field:'y_yanzhengma'">登录验证码</th>   
+           <!--  <th data-options="field:'y_yanzhengma'">登录验证码</th>  -->  
             <th data-options="field:'caozuo',formatter:caozuo">操作</th> 
-            <th data-options="field:'suoding',formatter:suoding">账号锁定</th>  
+            <th data-options="field:'suoding',formatter:suoding">账号锁定</th> 
+            <th data-options="field:'shezhi',formatter:shezhi">設置角色</th>  
         </tr>   
     </thead>    
 </table>  
@@ -187,14 +209,12 @@ function addYonghu(){
 		   			</tr>
 		   			<tr>
 		   				<td><label for="y_email">用户邮箱:</label> </td>
-		   				<td> <input class="easyui-validatebox" type="text" name="y_email" id="y_email1"  /> </td>
+		   				<td> <input class="easyui-validatebox" type="text" name="y_email" id="y_email1" data-options="required:true,validType:'email'" /> </td>
 		   			</tr>
 		   			<tr>
 		   				<td><label for="y_tel">用户电话:</label> </td>
-		   				<td> <input class="easyui-validatebox" type="text" name="y_tel" id="y_tel1"/> </td>
-		   			</tr>
-		   			 
-		   		
+		   				<td> <input class="easyui-validatebox"    name="y_tel" id="y_tel1"/> </td>
+		   			</tr> 
 		   		</table>
 		    
 	<a href="javascript:void(0)" class="easyui-linkbutton"   onclick="addYonghu()">保存</a>
@@ -223,7 +243,7 @@ function addYonghu(){
 		   			
 		   			<tr>
 		   				<td><label for="y_email">用户邮箱:</label> </td>
-		   				<td> <input class="easyui-validatebox" type="text" name="y_email" id="y_email2"  /> </td>
+		   				<td> <input class="easyui-validatebox" type="text" name="y_email" id="y_email2"  data-options="required:true,validType:'email'"   /> </td>
 		   			</tr>
 		   			<tr>
 		   				<td><label for="y_tel">用户电话:</label> </td>
@@ -239,6 +259,14 @@ function addYonghu(){
 				    
 		       
 			</form>   
+</div>  
+
+<!-- 設置角色页面 -->
+  
+<div id="win2" class="easyui-window" title="My Window" style="width:600px;height:400px"   
+        data-options="iconCls:'icon-save',modal:true,closed:true"> 
+  
+		  
 </div>  
 
 

@@ -32,7 +32,10 @@ public interface YonghuService {
 	 * 鎖鎖定用户信息
 	 */
 	Integer updateYonghujiesoByisLockout(Yonghu yonghu);
-	 
+	/**
+	 *  用户信息重置密碼
+	 */
+	  Integer updateYonghuReset(Yonghu yonghu);
 
 
 }

@@ -32,5 +32,8 @@ public interface YonghuMapper {
 	 * 解锁，鎖定用户信息
 	 */
 	Integer updateYonghujiesoByisLockout(Yonghu yonghu);
-	  
+	/**
+	 *  用户信息重置密碼
+	 */
+	  Integer updateYonghuReset(Yonghu yonghu);
 }
