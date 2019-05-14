@@ -3,6 +3,9 @@ package com.crm.service;
 import java.util.List;
 
 import com.crm.entity.Fenye;
+import com.crm.entity.Model;
+import com.crm.entity.Modelroles;
+import com.crm.entity.Models;
 import com.crm.entity.Roles;
 
 public interface RolesService {
@@ -32,5 +35,13 @@ public interface RolesService {
 	 * 查询用户角色信息名称集合
 	 */
 	Integer selectRolesAllByName(Roles roles);
+	/**
+	 * 根据角色id查询模块信息
+	 */
+	List<Models> selectModelByR_id(Integer r_id);
+	/**
+	 * 遍历新增角色模块信息
+	 */
+	Integer InsertRolem(String m_id,Integer r_id);
 
 }

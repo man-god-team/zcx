@@ -56,6 +56,44 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		insert into Roles(r_name)
 		values(#{r_name})
 	</insert>
+	<!-- 根据角色id查询模块信息 -->
+	<select id="selectModel" resultType="model">
+		SELECT m_id,m_name,m_parentId,m_path,m_weight,m_weitghtDescribe,m_ops
+		 FROM Model
+	</select>
+	<!-- 根据父节点查询模块总条数 --> 
+	<select id="selectModulByM_parentId" parameterType="_int" resultType="_int">
+		select count(*) from model
+			 where  m_parentId=#{m_parentId} 
+			 
+	</select>
 	
+	  <!-- 遍历新增角色模块信息 --> 
+	<insert id="insertRoleModule" parameterType="list">
+	INSERT INTO modelroles(r_id,m_id) VALUES
+		<foreach collection="list" item="item" open="(" separator="),(" close=")">
+		#{item.r_id},#{item.m_id}
+		</foreach>
+	</insert>
+	
+	 <!--  删除角色模块信息 -->
+	 <delete id="deleteRoleModule" parameterType="_int">
+	 	delete from modelroles
+	 		 where  r_id=#{r_id}
+				 
+	 </delete>
+	  <!-- 根据角色id和模块id查询数据总条数 -->
+	 
+	<select id="selectRoleModulByR_idAndM_id" parameterType="modelroles" resultType="_int">
+		select count(*) from modelroles
+			<where>
+				<if test="r_id !=null and r_id !=''">
+					and r_id=#{r_id}
+				</if>
+				<if test="m_id !=null and m_id !=''">
+				and	m_id=#{m_id}
+				</if>
+			</where>
+	</select>
 	
 </mapper>

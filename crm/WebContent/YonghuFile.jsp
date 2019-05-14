@@ -41,8 +41,60 @@ function shezhi(value,row,index){
 }
 /* 設置用戶角色  */
 function ShezhiYonghu(index){
-	var y_id=$("#dg").datagrid('getData').rows[index].y_id;
+	var row=$("#dg").datagrid('getData').rows[index];
+	 
+	$("#win2").window({
+		title: "您正在设置" + row.y_name + "的角色！！！！"
+	});
 	$('#win2').window('open');
+	$("#yhRoles").datagrid({
+		url: 'showRoles1'
+	});
+	$("#myRoles").datagrid({
+		url: 'showRolesByY_Id',
+		queryParams: { 
+			y_id:row.y_id
+		}
+	})
+}
+function addRoles() {   /*此事件为给用户添加角色*/
+	var r_id = $("#yhRoles").datagrid("getSelected").r_id;
+	var y_id = $("#dg").datagrid("getSelected").y_id; 
+	var role = $("#yhRoles").datagrid("getSelected");
+	if(role) {
+		$.post("addYonghuJuese", {
+			r_id:r_id,
+			y_id:y_id
+		}, function(res) {
+			if(res>0) {
+				$("#myRoles").datagrid("reload");
+			} else {
+				alert("对不起，該用戶已具備此角色！！！");
+			}
+		},"json");
+	} else {
+		$.messager.alert("提示","请选择角色名！！！！");
+	}
+}
+function deleteyonghuByRoles(){  /*此事件为删除用户已有的角色*/
+	var r_id = $("#myRoles").datagrid("getSelected").r_id;
+	var y_id = $("#dg").datagrid("getSelected").y_id; 
+	var role = $("#myRoles").datagrid("getSelected");
+	alert(r_id+"asdf"+y_id)
+	if(role) {
+		$.post("deleteYonghuJuese", {
+			r_id:r_id,
+			y_id:y_id
+		}, function(res) {
+			if(res>0) {
+				$("#myRoles").datagrid("reload");
+			} else {
+				alert("对不起，删除失败，请重试！！！");
+			}
+		},"json");
+	} else {
+		$.messager.alert("请选择角色名！！！！");
+	}
 }
 function suoding(value,row,index){
 	return '<a href="javascript:void(0)" class="easyui-linkbutton"  onclick="suodingYonghu('+index+')">锁定用户</a>   <a href="javascript:void(0)" class="easyui-linkbutton"  onclick="jiesuoYonghu('+index+')">解锁用户 </a>'
@@ -261,13 +313,38 @@ function addYonghu(){
 			</form>   
 </div>  
 
-<!-- 設置角色页面 -->
-  
-<div id="win2" class="easyui-window" title="My Window" style="width:600px;height:400px"   
-        data-options="iconCls:'icon-save',modal:true,closed:true"> 
-  
-		  
-</div>  
+ 
+<!--  角色的添加与删除的window弹框-->		
+		<div id="win2" class="easyui-window" data-options="modal:true,closed:true,iconCls:'icon-save'" style="width:500px;height:500px;padding:10px;">
+			<table>
+				<tr>
+					<td width="200px">
+						<table id="yhRoles" title="系统所有角色" class="easyui-datagrid" data-options="rownumbers:true,singleSelect:true,method:'post'">
+							<thead>
+								<tr>  
+									<th data-options="field:'r_id',width:80,hidden:true">角色ID</th>
+									<th data-options="field:'r_name',width:100">角色名</th>
+								</tr>
+							</thead>
+						</table>
+					</td>
+					<td width="100px">
+						<input type="button" value=">>" onclick="addRoles()" /></br> 
+						<input type="button"   value="&lt;&lt;" onclick="deleteyonghuByRoles()" /> 
+					</td>
+					<td width="200px" valign="top">
+						<table id="myRoles" title="当前用户所有角色" class="easyui-datagrid" data-options="rownumbers:true,singleSelect:true,method:'post'">
+							<thead>
+								<tr>  
+									<th data-options="field:'r_id',width:80,hidden:true">角色ID</th>
+									<th data-options="field:'r_name',width:100">角色名</th>
+								</tr>
+							</thead>
+						</table>
+					</td>
+				</tr>
+			</table>
+		</div>
 
 
 

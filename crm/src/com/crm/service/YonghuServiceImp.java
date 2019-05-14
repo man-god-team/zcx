@@ -7,7 +7,9 @@ import org.springframework.stereotype.Service;
 
 import com.crm.dao.YonghuMapper;
 import com.crm.entity.Fenye;
+import com.crm.entity.Roles;
 import com.crm.entity.Yonghu;
+import com.crm.entity.Yonghujuese;
 @Service
 public class YonghuServiceImp implements YonghuService{
 	@Autowired
@@ -53,6 +55,36 @@ public class YonghuServiceImp implements YonghuService{
 	public Integer updateYonghuReset(Yonghu yonghu) {
 		// TODO Auto-generated method stub
 		return yonghuMapper.updateYonghuReset(yonghu);
+	}
+
+	@Override
+	public List<Roles> selectRolesNofenye(Roles roles) {
+		// TODO Auto-generated method stub
+		return yonghuMapper.selectRolesNofenye(roles);
+	}
+
+	@Override
+	public List<Roles> selectRolesById(Yonghu yonghu) {
+		// TODO Auto-generated method stub
+		return yonghuMapper.selectRolesById(yonghu);
+	}
+
+	@Override
+	public Integer insertYonghuJuese(Yonghujuese yonghujuese) {
+		// TODO Auto-generated method stub
+		return yonghuMapper.insertYonghuJuese(yonghujuese);
+	}
+
+	@Override
+	public Integer selecttYonghuJueseByR_idAndY_id(Yonghujuese yonghujuese) {
+		// TODO Auto-generated method stub
+		return yonghuMapper.selecttYonghuJueseByR_idAndY_id(yonghujuese);
+	}
+
+	@Override
+	public Integer deleteYonghuJueseByR_idAndY_id(Yonghujuese yonghujuese) {
+		// TODO Auto-generated method stub
+		return yonghuMapper.deleteYonghuJueseByR_idAndY_id(yonghujuese);
 	}
 
 	 

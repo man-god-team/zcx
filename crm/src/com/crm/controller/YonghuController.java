@@ -10,7 +10,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.crm.entity.Fenye;
+import com.crm.entity.Roles;
 import com.crm.entity.Yonghu;
+import com.crm.entity.Yonghujuese;
+import com.crm.service.RolesService;
 import com.crm.service.YonghuService;
 import com.crm.service.YonghuServiceImp;
 import com.crm.util.MD5Util;
@@ -24,6 +27,8 @@ public class YonghuController {
 	 * @ResponseBody public void a() { System.out.println("sadf"); }
 	 */
 	
+	 
+
 	@Autowired
 	private YonghuService YonghuServiceImp;
 //	查詢用戶數據顯示
@@ -46,6 +51,15 @@ public class YonghuController {
 		 System.out.println(fenye); 
 		return fenye;
 	}
+//	查詢用戶數據顯示
+	@RequestMapping(value=("/showRoles1"),method=RequestMethod.POST)
+	@ResponseBody 
+	public List<Roles> showRoles1(Roles roles) { 
+			 
+		  
+		return YonghuServiceImp.selectRolesNofenye(roles);
+	}
+	
 //	删除用户 
 	@RequestMapping(value=("/deleteYonghu"),method=RequestMethod.POST)
 	@ResponseBody
@@ -94,5 +108,32 @@ public class YonghuController {
 	@ResponseBody
 	public Integer ResetYonghu(Yonghu yonghu) { 
 		return YonghuServiceImp.updateYonghuReset(yonghu);
+	}
+//	根據id查詢用戶角色信息
+	@RequestMapping(value=("/showRolesByY_Id"),method=RequestMethod.POST)
+	@ResponseBody
+	public List<Roles> showRolesByY_Id(Yonghu yonghu) { 
+		return YonghuServiceImp.selectRolesById(yonghu);
+	}
+//	新增用戶角色 
+	@RequestMapping(value=("/addYonghuJuese"),method=RequestMethod.POST)
+	@ResponseBody
+	public Integer addYonghuJuese(Yonghujuese yonghujuese) { 
+		Integer selecttYonghuJueseByR_idAndY_id = YonghuServiceImp.selecttYonghuJueseByR_idAndY_id(yonghujuese);
+		if(selecttYonghuJueseByR_idAndY_id>0) {
+			return 0;
+		}else {
+			return YonghuServiceImp.insertYonghuJuese(yonghujuese);
+		}
+		
+	}
+
+//	刪除用戶角色 
+	@RequestMapping(value=("/deleteYonghuJuese"),method=RequestMethod.POST)
+	@ResponseBody
+	public Integer deleteYonghuJuese(Yonghujuese yonghujuese) { 
+		 
+			return YonghuServiceImp.deleteYonghuJueseByR_idAndY_id(yonghujuese);
+		 
 	}
 }

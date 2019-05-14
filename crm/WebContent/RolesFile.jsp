@@ -30,6 +30,67 @@ function init(){
 	
 
 }
+function searchsetRoles(value, row, index) {
+	return "<a  href='javascript:void(0)' style='cursor:pointer;' onclick='control(" + index + ")'>查看</a> <a  href='javascript:void(0)' style='cursor:pointer;' onclick='kongzhi(" + index + ")'>设置</a> ";
+}
+function control(index) {
+	var data = $("#dg").datagrid("getData");
+	var row = data.rows[index];
+	$("#frm").form("load", row);
+	$("#wd").window("open");
+}
+
+function closechakan() {
+	$("#wd").window("close");
+}
+function kongzhi(index) {
+	var data = $("#dg").datagrid("getData");
+	var row = data.rows[index];
+	$("#menuTree").tree({
+		url: "zhanshiModel",
+		lines: true,
+		queryParams: {
+			r_id: row.r_id  
+		},
+		onContextMenu: function(e, node) {
+			$("#menuTree").tree('select', node.target);
+		}
+	});
+	  $("#menuTree").tree({
+		checkbox: true
+	});  
+	jiaoseid=null;
+	jiaoseid=row.r_id;
+	$("#mkWindow").window("open");
+}
+function tijiaoModules() {
+	 
+	var nodes = $("#menuTree").tree('getChecked', ['checked', 'indeterminate']);
+	var s = "";
+	for(var i = 0; i < nodes.length; i++) {
+		if(s == "") {
+			s += nodes[i].id;
+		} else {
+			s += ",";
+			s += nodes[i].id;
+		}
+	}
+	$.post("InsertRolem", {
+		m_id: s,
+		r_id: jiaoseid 
+	}, function(res) {
+		if(res>0) {
+			$.messager.alert("消息", "保存权限成功");
+			$("#mkWindow").window("close");
+			rolesId = "";
+			window.top.loadTree();
+		} else {
+			$.messager.alert("消息", res.messager);
+		}
+	},"json")
+}
+
+ 
 function caozuo(value,row,index){
 	return '<a href="javascript:void(0)" class="easyui-linkbutton"  onclick="editRoles('+index+')">修改</a>   <a href="javascript:void(0)" class="easyui-linkbutton"  onclick="deleteRoles('+index+')">删除 </a>'
 }
@@ -95,9 +156,9 @@ function addFrom(){
         <tr>
         	 
             <th data-options="field:'r_id'">角色id</th>   
-            <th data-options="field:'r_name'">角色名称</th>   
-              
+            <th data-options="field:'r_name'">角色名称</th>    
             <th data-options="field:'caozuo',formatter:caozuo">操作</th> 
+           <th data-options="field:'actionUpdate',width:200,title:'设置权限',formatter:searchsetRoles">操作</th>
            
         </tr>   
     </thead>    
@@ -160,6 +221,35 @@ function addFrom(){
 		       
 			</form>   
 </div>  
+<!-- 查看模塊信息 -->
+	<div id="wd" class="easyui-window" title="查看信息" data-options="modal:true,closed:true,iconCls:'icon-ok'" style="width: 500px;height: 300px;padding: 10px;">
+			<form id="frm">
+				<table cellpadding="5">
+					<tr>
+						<td>角色名称：</td>
+						<td><input class="easyui-textbox" type="text" name="r_name"  disabled="disabled"/></td>
+					</tr>
+				</table>
+			</form>
+			<div style="text-align: center;padding: 5px;">
+				<a href="javascript:void(0)" class="easyui-linkbutton" type="button" onclick="closechakan()">关闭</a>
+			</div>
+		</div>
+		<!-- 樹狀圖 -->
+	<div class="easyui-window" id="mkWindow" data-options="closed:true">
 
+			<div class="easyui-layout" style="width:200px;height:400px;">
+
+				<div id="centerTabs" data-options="region:'center',iconCls:'icon-ok',title:'模块信息',collapsible:true" style="width: 530px;">
+					<div id="menuTree">
+						<!--这个地方显示树状结构-->
+
+					</div>
+				</div>
+				<div data-options="region:'south'">
+					<input type="button" onclick="tijiaoModules()" value="提交" />
+				</div>
+			</div>
+		</div>
 </body>
 </html>

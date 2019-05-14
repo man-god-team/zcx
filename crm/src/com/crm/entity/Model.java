@@ -1,5 +1,8 @@
 package com.crm.entity;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class Model {
 	private Integer m_id;
 	private String m_name;
@@ -63,6 +66,10 @@ public class Model {
 	}
 	public void setM_exitString(Integer m_exitString) {
 		this.m_exitString = m_exitString;
+	}
+	
+	public Model() {
+		super();
 	}
 	@Override
 	public String toString() {

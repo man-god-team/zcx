@@ -14,12 +14,23 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 </sql>
  
+	<!-- 查询用户数据信息 -->
+	<select id="selectRolesNofenye" parameterType="roles" resultType="roles">
+		SELECT r_id,r_name
+		 FROM Roles
+	</select>
 	<!-- 按条件分页查询用户数据信息 -->
 	<select id="selectYonghuAll" parameterType="fenye" resultType="yonghu">
 		SELECT y_id,y_name,y_resetPassword,y_password,y_email,y_lastLoginTime,y_tel,y_createTime,y_pasdWrongShu,y_isLockout,y_weight,y_yanzhengma
 		 FROM yonghu
-		 <include refid="whl"></include>
-		 limit #{page},#{pageSize}
+		 <where>
+			<if test="y_name !=null and y_name !=''"> and y_name like "%"#{y_name}"%"</if>
+			<if test=" y_createEndTime !=null and y_createEndTime !='' "> and y_createTime &lt; #{y_createEndTime} </if>
+			<if test=" y_createStartTime !=null and y_createStartTime !='' "> and y_createTime &gt; #{y_createStartTime}</if>
+			<if test="y_isLockout !=null and y_isLockout !=''"> and y_isLockout=#{y_isLockout}</if>
+			
+		</where>
+		 <if test="page !=null and page !='' and pageSize !='' and pageSize !=null">limit #{page},#{pageSize}</if>
 	</select>
 	<!-- 查询用户数据信息总条数  -->
 	<select id="selectYonghuCount"   resultType="_int">
@@ -82,6 +93,38 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		insert into yonghu(y_name,y_createTime,y_password,y_email,y_tel,y_resetPassword,y_lastLoginTime,y_pasdWrongShu,y_weight)
 		values(#{y_name},#{y_createTime},#{y_password},#{y_email},#{y_tel},#{y_resetPassword},#{y_lastLoginTime},#{y_pasdWrongShu},#{y_weight})
 	</insert>
-	
+	   <!-- 根據id查詢用戶相關的角色信息 -->
+	   
+	  <select id="selectRolesById" parameterType="yonghu" resultType="roles">
+		    SELECT r.r_id,r.r_name FROM yonghu y , yonghujuese yj,roles r
+		WHERE y.y_id=yj.y_id AND yj.r_id=r.r_id
+		<if test="y_id != null and y_id !=''"> and y.y_id=#{y_id}</if>
+	  </select>
+	<!--   增加用戶角色信息 -->
+	  <!-- private Integer yr_id;
+	private Integer ;
+	private Integer ; -->
+	<insert id="insertYonghuJuese" parameterType="yonghujuese">
+		insert into yonghujuese(y_id,r_id)
+		values(#{y_id},#{r_id})	
+	</insert>
+	<!--  判定增加用戶角色信息（已存在的不能新增） -->
+	   
+	<select id="selecttYonghuJueseByR_idAndY_id" parameterType="yonghujuese" resultType="_int">
+		select count(*) from yonghujuese
+		<where>
+			<if test="y_id != null and y_id !=''">and y_id=#{y_id}</if>
+			<if test="r_id != null and r_id !=''">and r_id=#{r_id}</if>
+		</where>
+	</select>
+	 <!--  刪除用戶角色信息  -->
+	   
+	  <delete id="deleteYonghuJueseByR_idAndY_id" parameterType="yonghujuese">
+		delete from yonghujuese
+		<where>
+			<if test="y_id != null and y_id !=''">and y_id=#{y_id}</if>
+			<if test="r_id != null and r_id !=''">and r_id=#{r_id}</if>
+		</where>
+	</delete>  
 	
 </mapper>

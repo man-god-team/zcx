@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.crm.entity.Fenye;
+import com.crm.entity.Model;
+import com.crm.entity.Models;
 import com.crm.entity.Roles;
 import com.crm.service.RolesService;
  
@@ -17,17 +19,22 @@ import com.crm.service.RolesService;
 public class RolesController {
 
 	@Autowired
-	private RolesService rolesService;
-	
+	private RolesService rolesService; 
 
 //	查詢用戶數據顯示
 	@RequestMapping(value=("/showRoles"),method=RequestMethod.POST)
 	@ResponseBody 
 	public Fenye<Roles> showRoles(Integer page,Integer rows,String r_name) {
 			Fenye<Roles> fenye=new Fenye<Roles>();
-		 fenye.setR_name(r_name);
-		fenye.setPage((page-1)*rows);
-		fenye.setPageSize(rows);
+			if(  rows != null ) { 
+				 fenye.setPageSize(rows); 
+			}
+			if  ( page != null ) { 
+				fenye.setPage((page-1)*rows);
+			}
+		
+			 fenye.setR_name(r_name);
+		
 		List<Roles> selectRolesAll = rolesService.selectRolesAll(fenye);
 		Integer selectRolesCount = rolesService.selectRolesCount();
 		fenye.setRows(selectRolesAll);
@@ -62,11 +69,21 @@ public class RolesController {
 //	删除用户角色信息  
 	@RequestMapping(value=("/deleteRoles"),method=RequestMethod.POST)
 	@ResponseBody 
-	public Integer deleteRoles(Roles roles) {
-
-			return rolesService.deleteRoles(roles);
-		 
-		
+	public Integer deleteRoles(Roles roles) { 
+			return rolesService.deleteRoles(roles); 
+	}
+//	显示模块数据
+//	查詢用戶數據顯示
+	@RequestMapping(value=("/zhanshiModel"),method=RequestMethod.POST)
+	@ResponseBody 
+	public List<Models> zhanshiModel(Integer r_id) { 
+		return rolesService.selectModelByR_id(r_id);
+	}
+//	增加角色模塊 
+	@RequestMapping(value=("/InsertRolem"),method=RequestMethod.POST)
+	@ResponseBody 
+	public Integer InsertRolem(Integer r_id,String m_id) { 
+		return rolesService.InsertRolem(m_id,r_id);
 	}
  
 }

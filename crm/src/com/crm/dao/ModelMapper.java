@@ -1,30 +1,29 @@
 package com.crm.dao;
 
 import java.util.List;
-
-import com.crm.entity.Fenye;
+ 
 import com.crm.entity.Model;
 
 public interface ModelMapper {
 	/**
-	 * 按条件分页查询模块数据信息
+	 *  查询模块数据信息
 	 */
-	List<Model> selectModelAll(Fenye<Model> fenye);
-	/**
-	 * 查询模块数据信息总条数
-	 */
-	Integer selectModelCount();
+	List<Model> selectModelAll(Model model);
+	 
 	/**
 	 * 修改用户模块信息
 	 */
-	Integer updateModelAll(Model Model);
+	Integer updateModelAll(Model model);
 	/**
 	 * 删除模块数据信息
 	 */
-	Integer deleteModel(Model Model);
+	Integer deleteModel(Model model);
 	/**
 	 * 新增模块信息
 	 */
-	Integer insertModel(Model Model);
-	
+	Integer insertModel(Model model);
+	/**
+	 * 根据id查询模块信息
+	 */
+	Model selectModuleById(Model model);
 }

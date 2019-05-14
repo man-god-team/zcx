@@ -4,27 +4,30 @@ import java.util.List;
 
 import com.crm.entity.Fenye;
 import com.crm.entity.Model;
+import com.crm.entity.Models;
+import com.crm.entity.Roles;
+import com.crm.entity.Model;
 
 public interface ModelService {
 	/**
-	 * 按条件分页查询模块数据信息
+	 * 根据id查询模块信息
 	 */
-	List<Model> selectModelAll(Fenye<Model> fenye);
+	Model selectModuleById(Model model);
 	/**
-	 * 查询模块数据信息总条数
+	 *  查询模块数据信息
 	 */
-	Integer selectModelCount();
+	 List<Models> selectModelAll(Model model);
 	/**
 	 * 修改用户模块信息
 	 */
-	Integer updateModelAll(Model Model);
+	Integer updateModelAll(Model model);
 	/**
 	 * 删除模块数据信息
 	 */
-	Integer deleteModel(Model Model);
+	Integer deleteModel(Model model);
 	/**
 	 * 新增模块信息
 	 */
-	Integer insertModel(Model Model);
-
+	Integer insertModel(Model model);
+	
 }
