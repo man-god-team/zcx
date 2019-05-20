@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.crm.dao.ModelMapper">
+
+	<!--查询模块数据信息 -->
+	
+	<select id="selectModelAll" parameterType="model" resultType="model">
+	SELECT m_id,m_name,m_parentId,m_path,m_weight,m_weitghtDescribe,m_ops
+		 FROM Model
+		</select>
+	 
+	 	 
+	<!-- 删除模块信息 -->
+	  <delete id="deleteModel" parameterType="model">
+		delete from Model
+			<where>
+				<if test="m_id !=null and m_id !=''">
+					m_id=#{m_id}
+				</if>
+			</where>
+	</delete> 
+	<!--  根据id查询模块信息 -->
+	  
+	 <select id="selectModuleById" parameterType="model" resultType="model">
+		 SELECT m_id,m_name,m_parentId,m_path,m_weight
+		 FROM Model
+		 <where>
+				<if test="m_id !=null and m_id !=''">
+					m_id=#{m_id}
+				</if>
+			</where>
+	 </select>
+	<!--修改模块信息  -->
+	  <update id="updateModelAll" parameterType="model">
+		update Model 
+			<set>
+				<if test=" m_name != null and  m_name !=''">m_name =#{m_name},</if>
+				<if test=" m_parentId != null and  m_parentId !=''">m_parentId =#{m_parentId},</if>
+				<if test=" m_path != null and  m_path !=''">m_path =#{m_path},</if>
+				<if test=" m_weight != null and  m_weight !=''">m_weight =#{m_weight}</if>
+			</set>
+				<where>
+				<if test="m_id !=null and m_id !=''">
+					m_id=#{m_id}
+				</if>
+				</where>
+	</update>   
+	 
+	<!-- 新增模块信息 -->
+	  <insert id="insertModel" parameterType="model">
+		insert into Model(m_name,m_parentId,m_path,m_weight)
+		values(#{m_name},#{m_parentId},#{m_path},#{m_weight})
+	</insert> 
+	 <!-- 根据用户名称 查询相关模块信息 -->
+	   
+	<select id="selectModelByY_name" parameterType="yonghu" resultType="model">
+		SELECT m.* FROM yonghu y,roles r,yonghujuese yj,model m,modelroles mr
+	WHERE y.y_id=yj.y_id and yj.r_id=r.r_id and r.r_id=mr.r_id and mr.m_id=m.m_id  
+					and y.y_name=#{y_name} 
+	
+	</select>
+</mapper>

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.crm.dao.XueshenghuifangMapper">
+	<select id="selectCount" parameterType="fenye" resultType="int">
+		SELECT count(1)
+		FROM xueshenghuifang x
+		INNER JOIN student s on (x.stu_id=s.stu_id)
+		INNER JOIN yonghu y on
+		(x.y_id=y.y_id)
+		 <where>
+		 <!-- sql语句速度优化排序 -->
+			 <if test="t_method != null and t_method != '' ">
+			<!-- 跟踪方式 -->
+				and t_method=#{t_method}
+			</if>
+			<if test="t_Revisit != null and t_Revisit != '' ">
+			 <!--回访情况  -->
+			 	and t_Revisit=#{t_Revisit}
+			</if>
+			<if test=" t_visitTime != null and t_visitTime != ''  and t_nextTraceTime != null and t_nextTraceTime != '' ">
+			 <!--时间范围查询  -->
+				and x.t_visitTime Between #{t_visitTime} And #{t_nextTraceTime}
+			</if>
+			<if test="stu_name != null and stu_name != '' ">
+			<!--学生名称  -->
+				and stu_name like "%"#{stu_name}"%"
+			</if>
+			
+			<if test=" y_name != null  and  y_name != '' ">
+			 <!--用户（跟踪者姓名）  -->
+				and  y_name like "%"#{y_name}"%"
+			</if>
+		</where> 
+	</select>
+
+	<resultMap type="Xueshenghuifang" id="Map">
+		<id column="t_id" property="t_id" />
+		<result column="t_id" property="t_id" />
+		<result column="stu_id" property="stu_id" />
+		<result column="y_id" property="y_id" />
+		<result column="t_visitTime" property="t_visitTime" />
+		<result column="t_Revisit" property="t_Revisit" />
+		<result column="t_method" property="t_method" />
+		<result column="t_nextTraceTime" property="t_nextTraceTime" />
+		<result column="t_note" property="t_note" />
+		<result column="stu_name" property="student.stu_name" />
+		<result column="y_name" property="yonghu.y_name" />
+
+	</resultMap>
+	<select id="selectAllXueshenghuifang" parameterType="fenye"
+		resultMap="Map">
+		SELECT x.*,s.stu_name,y.y_name
+		FROM xueshenghuifang x
+		INNER JOIN student s on (x.stu_id=s.stu_id)
+		INNER JOIN yonghu y on
+		(x.y_id=y.y_id)
+		 <where>
+		 <!-- sql语句速度优化排序 -->
+			 <if test="t_method != null and t_method != '' ">
+			<!-- 跟踪方式 -->
+				and t_method=#{t_method}
+			</if>
+			<if test="t_Revisit != null and t_Revisit != '' ">
+			 <!--回访情况  -->
+			 	and t_Revisit=#{t_Revisit}
+			</if>
+			<if test=" t_visitTime != null and t_visitTime != ''  and t_nextTraceTime != null and t_nextTraceTime != '' ">
+			 <!--时间范围查询  -->
+				and x.t_visitTime Between #{t_visitTime} And #{t_nextTraceTime}
+			</if>
+			<if test="stu_name != null and stu_name != '' ">
+			<!--学生名称  -->
+				and stu_name like "%"#{stu_name}"%"
+			</if>
+			
+			<if test=" y_name != null  and  y_name != '' ">
+			 <!--用户（跟踪者姓名）  -->
+				and  y_name like "%"#{y_name}"%"
+			</if>
+		</where> 
+		limit #{page},#{pageSize}
+	</select>
+</mapper>

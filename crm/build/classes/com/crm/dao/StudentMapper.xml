@@ -1,0 +1,421 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.crm.dao.StudentMapper">
+
+	<select id="selectAllByfenpei" parameterType="fenye" resultType="student">
+		select * from student
+		where y_id is null
+	</select>
+	<select id="selectAll" parameterType="fenye" resultType="student">
+	select * from student
+	 <where>
+			 <if test="r_name =='网络咨询师'">
+				   <if test="student.y_id != null and student.y_id !=''">  
+					 	and y_id =#{student.y_id}
+					  </if>   
+			</if>
+			<if test="student.stu_name != null and student.stu_name !=''">
+			    and  stu_name like "%"#{student.stu_name}"%"
+			</if>
+			<if test="student.stu_tel != null and student.stu_tel !=''">
+			    and stu_tel=#{student.stu_tel}
+			</if>
+			<if test="student.p_isPay != null and student.p_isPay !=''">
+			    and p_isPay=#{student.p_isPay}
+			</if>
+			<if test="student.stu_qq != null and student.stu_qq !=''">
+			    and stu_qq=#{student.stu_qq}
+			</if>
+			<if test="student.stu_loadTime != null and student.stu_loadTime !=''">
+			    and stu_loadTime=#{student.stu_loadTime}
+			</if>
+			<if test="student.p_timeTheDoor != null and student.p_timeTheDoor !=''">
+			    and p_timeTheDoor=#{student.p_timeTheDoor}
+			</if>
+			<if test="student.p_firstReturnTime != null and student.p_firstReturnTime !=''">
+			    and p_firstReturnTime=#{student.p_firstReturnTime}
+			</if>
+			<if test="student.p_classTime != null and student.p_classTime !=''">
+			    and p_classTime=#{student.p_classTime}
+			</if>
+			<if test="student.p_payTime != null and student.p_payTime !=''">
+			    and p_payTime=#{student.p_payTime}
+			</if>
+			<if test="student.p_validity != null ">
+			    and p_validity=#{student.p_validity}
+			</if>
+			<if test="student.p_isReturn != null ">
+			    and p_isReturn=#{student.p_isReturn}
+			</if>
+			
+		</where> 
+	
+	limit #{page},#{pageSize}
+	</select>
+	<select id="selectStudentCount" parameterType="fenye" resultType="int">
+	select count(1) from student
+	 	<where>
+				 <if test="r_name =='网络咨询师'">
+					   <if test="student.y_id != null and student.y_id !=''">  
+						 	and y_id =#{student.y_id}
+						  </if>   
+				</if>
+				<if test="student.stu_name != null and student.stu_name !=''">
+				    and  stu_name like "%"#{student.stu_name}"%"
+				</if>
+				<if test="student.stu_tel != null and student.stu_tel !=''">
+				    and stu_tel=#{student.stu_tel}
+				</if>
+				<if test="student.p_isPay != null and student.p_isPay !=''">
+				    and p_isPay=#{student.p_isPay}
+				</if>
+				<if test="student.stu_qq != null and student.stu_qq !=''">
+				    and stu_qq=#{student.stu_qq}
+				</if>
+				<if test="student.stu_loadTime != null and student.stu_loadTime !=''">
+				    and stu_loadTime=#{student.stu_loadTime}
+				</if>
+				<if test="student.p_timeTheDoor != null and student.p_timeTheDoor !=''">
+				    and p_timeTheDoor=#{student.p_timeTheDoor}
+				</if>
+				<if test="student.p_firstReturnTime != null and student.p_firstReturnTime !=''">
+				    and p_firstReturnTime=#{student.p_firstReturnTime}
+				</if>
+				<if test="student.p_classTime != null and student.p_classTime !=''">
+				    and p_classTime=#{student.p_classTime}
+				</if>
+				<if test="student.p_payTime != null and student.p_payTime !=''">
+				    and p_payTime=#{student.p_payTime}
+				</if>
+				<if test="student.p_validity != null ">
+				    and p_validity=#{student.p_validity}
+				</if>
+				<if test="student.p_isReturn != null ">
+				    and p_isReturn=#{student.p_isReturn}
+				</if>
+				
+			</where> 
+			<!-- <where>
+
+			<if test="student.stu_name != null and student.stu_name !=''">
+			    and stu_name=#{student.stu_name}
+			</if>
+		</where> -->
+	
+	</select>
+	<insert id="add" parameterType="student">
+	insert into student (y_id,stu_name,stu_sex,stu_age,stu_tel,stu_xueli,stu_State,stu_sourcer,stu_site,stu_qq,stu_weiXin,stu_reported,stu_note)
+	 values (#{y_id},#{stu_name},#{stu_sex},#{stu_age},#{stu_tel},#{stu_xueli},#{stu_State},#{stu_sourcer},#{stu_site},#{stu_qq},#{stu_weiXin},#{stu_reported},#{stu_note})
+		
+	
+	</insert>
+	<update id="update" parameterType="student">
+	 update student 
+	 <set>
+			<if test="stu_name != null and stu_name !=''">
+			     stu_name=#{stu_name},
+			</if>
+			<if test="stu_sex != null and stu_sex !=''">
+			     stu_sex=#{stu_sex},
+			</if>
+			<if test="stu_age != null and stu_age !=''">
+			     stu_age=#{stu_age},
+			</if>
+			<if test="stu_tel != null and stu_tel !=''">
+			     stu_tel=#{stu_tel},
+			</if>
+			<if test="stu_xueli != null and stu_xueli !=''">
+			     stu_xueli=#{stu_xueli},
+			</if>
+			<if test="stu_State != null ">
+			     stu_State=#{stu_State},
+			</if>
+			<if test="stu_sourcer != null and stu_sourcer !=''">
+			     stu_sourcer=#{stu_sourcer},
+			</if>
+			<if test="stu_site != null and stu_site !=''">
+			     stu_site=#{stu_site},
+			</if>
+			<if test="stu_qq != null and stu_qq !=''">
+			     stu_qq=#{stu_qq},
+			</if>
+			<if test="stu_weiXin != null and stu_weiXin !=''">
+			     stu_weiXin=#{stu_weiXin},
+			</if>
+			<if test="stu_reported != null and stu_reported !=''">
+			     stu_reported=#{stu_reported},
+			</if>
+			<if test="stu_note != null and stu_note !=''">
+			     stu_note=#{stu_note},
+			</if>
+			<if test="y_id != null and y_id !=''">
+			     y_id=#{y_id},
+			</if>
+		</set>
+		<where>
+			<if test="stu_id != null and stu_id !=''">
+			stu_id=#{stu_id}
+			</if>
+		</where>
+	</update>
+	
+	<!--、、、、 、 、 /// -->
+	<!--关于sql语句优化（简单）: T1:int/(是否) T2：String/＝ T3:String/like data/范围查询 -->
+	<select id="selectCount" parameterType="fenye" resultType="int">
+		  
+		SELECT  count(1)
+		FROM student s
+	
+		INNER JOIN yonghu yh on
+		(s.y_id=yh.y_id)
+		<where>
+			<if test="t.p_validity !=null and t.p_validity != ''  ">
+				<!-- 是否有效int -->
+				and p_validity=#{t.p_validity}
+			</if>
+			
+			<if test="t.p_isReturn !=null and t.p_isReturn != ''  ">
+				<!--是否回访int -->
+				and p_isReturn=#{t.p_isReturn}
+			</if>
+			<if test="t.p_isPay != null and t.p_isPay != '' ">
+				<!--是否缴费int -->
+				and p_isPay=#{t.p_isPay}
+			</if>
+
+			<if test="t.stu_qq != null and t.stu_qq != '' ">
+				<!-- QQvarchar -->
+				and stu_qq like "%"#{t.stu_qq}"%"
+			</if>
+
+			<if test="t.stu_loadTime != null and t.stu_loadTime != '' ">
+				<!--创建时间date -->
+				and stu_loadTime=#{t.stu_loadTime}
+			</if>
+
+			<if test="t.p_timeTheDoor != null and t.p_timeTheDoor != '' ">
+				<!--上门时间date -->
+				and p_timeTheDoor=#{t.p_timeTheDoor}
+			</if>
+
+			<if test="t.p_firstReturnTime != null and t.p_firstReturnTime != '' ">
+				<!--首次回访时间date -->
+				and p_firstReturnTime=#{t.p_firstReturnTime}
+			</if>
+
+			<if test="t.p_payTime != null and t.p_payTime != '' ">
+				<!--缴费时间date -->
+				and p_payTime=#{t.p_payTime}
+			</if>
+
+			<if test="t.p_classTime != null and t.p_classTime != '' ">
+				<!--进班时间 -->
+				and p_classTime=#{t.p_classTime}
+			</if>
+
+			<if test="t.stu_name != null and t.stu_name != '' ">
+				<!--姓名关键字 varchar -->
+				and stu_name like "%"#{t.stu_name}"%"
+			</if>
+
+			<if test="t.stu_tel != null and t.stu_tel != '' ">
+				<!--电话varchar -->
+				and stu_tel like "%"#{t.stu_tel}"%"
+			</if>
+
+			<if test="t.y_name != null and t.y_name != '' ">
+				<!--咨询师varchar -->
+				and y_name like "%"#{t.y_name}"%"
+			</if>
+		</where>
+	
+		
+	</select>
+	<resultMap type="student" id="StudentMap">
+		<id column="stu_id" property="stu_id" />
+		<result column="stu_name" property="stu_name" />
+		<result column="stu_sex" property="stu_sex" />
+		<result column="stu_age" property="stu_age" />
+		<result column="stu_tel" property="stu_tel" />
+		<result column="stu_xueli" property="stu_xueli" />
+		<result column="stu_State" property="stu_State" />
+		<result column="stu_sourcer" property="stu_sourcer" />
+		<result column="stu_site" property="stu_site" />
+		<result column="stu_qq" property="stu_qq" />
+		<result column="stu_weiXin" property="stu_weiXin" />
+		<result column="stu_reported" property="stu_reported" />
+		<result column="stu_note" property="stu_note" />
+		<result column="stu_Address" property="stu_Address" />
+		<result column="y_id" property="y_id" />
+		<result column="p_class" property="p_class" />
+		<result column="p_validity" property="p_validity" />
+		<result column="p_whyValidity" property="p_whyValidity" />
+		<result column="p_score" property="p_score" />
+		<result column="p_isReturn" property="p_isReturn" />
+		<result column="p_firstReturnTime" property="p_firstReturnTime" />
+		<result column="p_isTheDoor" property="p_isTheDoor" />
+		<result column="p_timeTheDoor" property="p_timeTheDoor" />
+		<result column="p_isPay" property="p_isPay" />
+		<result column="p_payTime" property="p_payTime" />
+		<result column="p_price" property="p_price" />
+		<result column="p_isRefund" property="p_isRefund" />
+		<result column="p_isClass" property="p_isClass" />
+		<result column="p_classTime" property="p_classTime" />
+		<result column="p_classNote" property="p_classNote" />
+		<result column="p_whyRefund" property="p_whyRefund" />
+		<result column="p_deposit" property="p_deposit" />
+		<result column="p_depositTime" property="p_depositTime" />
+		<result column="rouleNote" property="rouleNote" />
+		<result column="stu_loadTime" property="stu_loadTime" />
+		<result column="y_name" property="yonghu.y_name" />
+
+	</resultMap>
+	<select id="selectAllStudent" parameterType="fenye" resultMap="StudentMap">
+	SELECT  distinct s.*,yh.y_name
+		FROM student s
+	
+		INNER JOIN yonghu yh on
+		(s.y_id=yh.y_id)
+	 
+			<where>
+			<if test="t.p_validity !=null and t.p_validity != ''  ">
+				<!-- 是否有效int -->
+				and p_validity=#{t.p_validity}
+			</if>
+			
+			<if test="t.p_isReturn !=null and t.p_isReturn != ''  ">
+				<!--是否回访int -->
+				and p_isReturn=#{t.p_isReturn}
+			</if>
+			<if test="t.p_isPay != null and t.p_isPay != '' ">
+				<!--是否缴费int -->
+				and p_isPay=#{t.p_isPay}
+			</if>
+
+			<if test="t.stu_qq != null and t.stu_qq != '' ">
+				<!-- QQvarchar -->
+				and stu_qq like "%"#{t.stu_qq}"%"
+			</if>
+
+			<if test="t.stu_loadTime != null and t.stu_loadTime != '' ">
+				<!--创建时间date -->
+				and stu_loadTime=#{t.stu_loadTime}
+			</if>
+
+			<if test="t.p_timeTheDoor != null and t.p_timeTheDoor != '' ">
+				<!--上门时间date -->
+				and p_timeTheDoor=#{t.p_timeTheDoor}
+			</if>
+
+			<if test="t.p_firstReturnTime != null and t.p_firstReturnTime != '' ">
+				<!--首次回访时间date -->
+				and p_firstReturnTime=#{t.p_firstReturnTime}
+			</if>
+
+			<if test="t.p_payTime != null and t.p_payTime != '' ">
+				<!--缴费时间date -->
+				and p_payTime=#{t.p_payTime}
+			</if>
+
+			<if test="t.p_classTime != null and t.p_classTime != '' ">
+				<!--进班时间 -->
+				and p_classTime=#{t.p_classTime}
+			</if>
+
+			<if test="t.stu_name != null and t.stu_name != '' ">
+				<!--姓名关键字 varchar -->
+				and stu_name like "%"#{t.stu_name}"%"
+			</if>
+
+			<if test="t.stu_tel != null and t.stu_tel != '' ">
+				<!--电话varchar -->
+				and stu_tel like "%"#{t.stu_tel}"%"
+			</if>
+
+			<if test="t.y_name != null and t.y_name!= ''">
+				<!--咨询师varchar -->
+				and y_name like "%"#{t.y_name}"%"
+			</if>
+		</where>
+		limit #{page},#{pageSize}
+	</select>
+
+	<update id="updataStudentByid" parameterType="student">
+		UPDATE student
+		<set>
+			<if test="stu_Address != null and stu_Address != '' ">
+				stu_Address=#{stu_Address}
+			</if>
+			<if test="y_id != null and y_id != '' ">
+				y_id=#{y_id}
+			</if>
+			<if test="p_class != null and p_class != '' ">
+				p_class=#{p_class}
+			</if>
+			<if test="p_validity != null and p_validity != '' ">
+				p_validity=#{p_validity}
+			</if>
+			<if test="p_whyValidity != null and p_whyValidity != '' ">
+				p_whyValidity=#{p_whyValidity}
+			</if>
+			<if test="p_score != null and p_score != '' ">
+				p_score=#{p_score}
+			</if>
+			<if test="p_isReturn != null and p_isReturn != '' ">
+				p_isReturn=#{p_isReturn}
+			</if>
+			<if test="p_firstReturnTime != null and p_firstReturnTime != '' ">
+				p_firstReturnTime=#{p_firstReturnTime}
+			</if>
+			<if test="p_isTheDoor != null and p_isTheDoor != '' ">
+				p_isTheDoor=#{p_isTheDoor}
+			</if>
+			<if test="p_timeTheDoor != null and p_timeTheDoor != '' ">
+				p_timeTheDoor=#{p_timeTheDoor}
+			</if>
+			<if test="p_isPay != null and p_isPay != '' ">
+				p_isPay=#{p_isPay}
+			</if>
+			<if test="p_payTime != null and p_payTime != '' ">
+				p_payTime=#{p_payTime}
+			</if>
+			<if test="p_price != null and p_price != '' ">
+				p_price=#{p_price}
+			</if>
+			<if test="p_isRefund != null and p_isRefund != '' ">
+				p_isRefund=#{p_isRefund}
+			</if>
+			<if test="p_isClass != null and p_isClass != '' ">
+				p_isClass=#{p_isClass}
+			</if>
+			<if test="p_classTime != null and p_classTime != '' ">
+				p_classTime=#{p_classTime}
+			</if>
+			<if test="p_classNote != null and p_classNote != '' ">
+				p_classNote=#{p_classNote}
+			</if>
+			<if test="p_whyRefund != null and p_whyRefund != '' ">
+				p_whyRefund=#{p_whyRefund}
+			</if>
+			<if test="p_deposit != null and p_deposit != '' ">
+				p_deposit=#{p_deposit}
+			</if>
+			<if test="p_depositTime != null and p_depositTime != '' ">
+				p_depositTime=#{p_depositTime}
+			</if>
+			<if test="rouleNote != null and rouleNote != '' ">
+				rouleNote=#{rouleNote}
+			</if>
+
+
+		</set>
+		where stu_id=#{stu_id}
+	</update>
+
+	<delete id="deleteStudent" parameterType="int">
+		DELETE from
+		student WHERE stu_id=#{stu_id}
+	</delete>
+</mapper>

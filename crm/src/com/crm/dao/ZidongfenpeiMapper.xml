@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.crm.dao.ZidongfenpeiMapper">
+ 
+	
+	<select id="selectAllByZidongfenpei" resultType="zidongfenpei">
+	SELECT f_id,fenpeizhuangtai FROM zidongfenpei
+	</select>
+	<update id="updateZidongfenpei" parameterType="zidongfenpei" >
+		update zidongfenpei
+		<set>
+			<if test="fenpeizhuangtai !=null and fenpeizhuangtai !=''">
+				fenpeizhuangtai=#{fenpeizhuangtai}
+			</if>
+			<where>
+				<if test="f_id !=null and f_id !=''">f_id=#{f_id} </if>
+			</where>
+		</set>
+	</update>
+	
+
+
+</mapper>

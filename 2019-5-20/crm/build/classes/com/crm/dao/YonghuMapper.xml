@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.crm.dao.YonghuMapper">
+ 
+	<select id="selectYonghuAllBynone" parameterType="yonghu" resultType="yonghu">
+	SELECT y.* FROM yonghu y ,roles r,yonghujuese yj
+	where y.y_id=yj.y_id and yj.r_id=r.r_id and 
+	r.r_name=#{r_name}
+		 
+	</select>
+	<!--   查询出未进行分配的学生 -->
+	 
+	<select id="selectAllByfenpei" parameterType="fenye" resultType="student">
+		select * from student
+		where y_id is null
+	</select>
+ 
+ <select id="selectStudentCount" parameterType="fenye" resultType="_int">
+		select count(y_id) from student
+		 where y_id is null
+	</select>
+	<!--  查询用户所有的咨询师 -->
+	
+	<select id="selectYonghuByR_id" parameterType="yonghu" resultType="yonghu">
+		SELECT y_id,y_name
+		 FROM yonghu
+		 
+	</select>
+	
+	<!-- 查询用户数据信息 -->
+	<select id="selectRolesNofenye" parameterType="roles" resultType="roles">
+		SELECT r_id,r_name
+		 FROM Roles
+		 
+	</select>
+	<!-- 按条件分页查询用户数据信息 -->
+	<select id="selectYonghuAll" parameterType="fenye" resultType="yonghu">
+		SELECT y_id,y_name,y_resetPassword,y_password,y_email,y_lastLoginTime,y_tel,y_createTime,y_pasdWrongShu,y_isLockout,y_weight,y_yanzhengma,yq_state, yq_startTime, yq_endTime
+		 FROM yonghu
+		 
+		 <if test="orderByTime !='' and orderByTime !=null">
+			 <choose>
+				 <when test="orderByTime==2">order by  y_lastLoginTime</when>
+				 <when test="orderByTime==1">order by  y_createTime</when>
+				 
+				 
+			 </choose>
+			 
+		 </if>
+		 
+		 <where>
+			<if test="y_name !=null and y_name !=''"> and y_name like "%"#{y_name}"%"</if>
+			<if test=" y_createEndTime !=null and y_createEndTime !='' "> and y_createTime &lt; #{y_createEndTime} </if>
+			<if test=" y_createStartTime !=null and y_createStartTime !='' "> and y_createTime &gt; #{y_createStartTime}</if>
+			<if test="y_isLockout !=null and y_isLockout !=''"> and y_isLockout=#{y_isLockout}</if>
+			<if test="yq_state !=null and yq_state !=''"> and yq_state=#{yq_state}</if>
+			<if test="minTime !=null and minTime !='' and maxTime !=null and  maxTime !=''"> and yq_startTime between #{minTime} and #{maxTime}</if>
+			 
+		</where>
+		 
+		 <if test="page !=null and page !='' and pageSize !='' and pageSize !=null">limit #{page},#{pageSize}</if>
+	</select>
+	<!-- 查询用户数据信息总条数  -->
+	<select id="selectYonghuCount"   resultType="_int">
+		SELECT count(y_id) FROM yonghu
+		 <where>
+			<if test="y_name !=null and y_name !=''"> and y_name like "%"#{y_name}"%"</if>
+			<if test=" y_createEndTime !=null and y_createEndTime !='' "> and y_createTime &lt; #{y_createEndTime} </if>
+			<if test=" y_createStartTime !=null and y_createStartTime !='' "> and y_createTime &gt; #{y_createStartTime}</if>
+			<if test="y_isLockout !=null and y_isLockout !=''"> and y_isLockout=#{y_isLockout}</if>
+			<if test="yq_state !=null and yq_state !=''"> and yq_state=#{yq_state}</if>
+			<if test="minTime !=null and minTime !='' and maxTime !=null and maxTime !=''"> and yq_startTime between #{minTime} and #{maxTime}</if>
+		</where>
+	</select>
+	<!-- 删除用户信息 -->
+	<delete id="deleteYonghu" parameterType="yonghu">
+		delete from yonghu
+			<where>
+				<if test="y_id !=null and y_id !=''">
+					y_id=#{y_id}
+				</if>
+			</where>
+	</delete>
+	<!-- 签到，退用户信息 -->
+  
+	<update id="updateYonghuqiandaoByisLockout" parameterType="yonghu">
+		update yonghu
+			<set>
+				<if test="yq_state != null">yq_state=#{yq_state},</if>
+				<if test="yq_startTime != null">yq_startTime=#{yq_startTime},</if>
+				
+				<if test="yq_endTime != null">yq_endTime=#{yq_endTime}</if>
+			</set>
+			<where>
+				<if test="y_id !=null and y_id !=''">
+					y_id=#{y_id}
+				</if>
+			</where>
+	</update>
+	<!-- 解锁,锁定用户 -->
+	<update id="updateYonghujiesoByisLockout" parameterType="yonghu">
+		update yonghu
+			<set>
+				<if test="y_isLockout != null">y_isLockout=#{y_isLockout},</if>
+				<if test="y_pasdWrongShu != null">y_pasdWrongShu=#{y_pasdWrongShu}</if>
+			</set>
+			<where>
+				<if test="y_id !=null and y_id !=''">
+					y_id=#{y_id}
+				</if>
+			</where>
+	</update>
+	<!--修改用户信息  -->
+	<update id="updateYonghu" parameterType="yonghu">
+		update yonghu
+			<set> 
+				<if test="y_name != null and y_name != ''">y_name=#{y_name},</if> 
+				<if test="y_email != null and y_email != ''">y_email=#{y_email},</if>
+				<if test="y_tel != null and y_tel != ''">y_tel=#{y_tel},</if>
+				<if test="y_lastLoginTime != null and y_lastLoginTime != ''">y_lastLoginTime=#{y_lastLoginTime}</if>
+				 
+			</set>
+			<where>
+				<if test="y_id !=null and y_id !=''">
+					y_id=#{y_id}
+				</if>
+			</where>
+	</update> 
+	<!--重置密碼  -->
+	<update id="updateYonghuReset" parameterType="yonghu">
+		update yonghu
+			<set> 
+				<if test="y_resetPassword != null and y_resetPassword != ''">y_password=#{y_resetPassword}</if> 
+				  
+			</set>
+			<where>
+				<if test="y_id !=null and y_id !=''">
+					y_id=#{y_id}
+				</if>
+			</where>
+	</update> 
+	<!-- 新增用户信息 -->
+	<insert id="insertYonghu" parameterType="yonghu">
+		insert into yonghu(y_name,y_createTime,y_password,y_email,y_tel,y_resetPassword,y_lastLoginTime,y_pasdWrongShu,y_weight)
+		values(#{y_name},#{y_createTime},#{y_password},#{y_email},#{y_tel},#{y_resetPassword},#{y_lastLoginTime},#{y_pasdWrongShu},#{y_weight})
+	</insert>
+	   <!-- 根據id查詢用戶相關的角色信息 -->
+	   
+	  <select id="selectRolesById" parameterType="yonghu" resultType="roles">
+		    SELECT r.r_id,r.r_name FROM yonghu y , yonghujuese yj,roles r
+		WHERE y.y_id=yj.y_id AND yj.r_id=r.r_id
+		<if test="y_id != null and y_id !=''"> and y.y_id=#{y_id}</if>
+	  </select>
+	<!--   增加用戶角色信息 -->
+	  <!-- private Integer yr_id;
+	private Integer ;
+	private Integer ; -->
+	<insert id="insertYonghuJuese" parameterType="yonghujuese">
+		insert into yonghujuese(y_id,r_id)
+		values(#{y_id},#{r_id})	
+	</insert>
+	<!--  判定增加用戶角色信息（已存在的不能新增） -->
+	   
+	<select id="selecttYonghuJueseByR_idAndY_id" parameterType="yonghujuese" resultType="_int">
+		select count(*) from yonghujuese
+		<where>
+			<if test="y_id != null and y_id !=''">and y_id=#{y_id}</if>
+			<if test="r_id != null and r_id !=''">and r_id=#{r_id}</if>
+		</where>
+	</select>
+	 <!--  刪除用戶角色信息  -->
+	   
+	  <delete id="deleteYonghuJueseByR_idAndY_id" parameterType="yonghujuese">
+		delete from yonghujuese
+		<where>
+			<if test="y_id != null and y_id !=''">and y_id=#{y_id}</if>
+			<if test="r_id != null and r_id !=''">and r_id=#{r_id}</if>
+		</where>
+	</delete>  
+	<!-- 修改用户密码 -->
+	  
+	<update id="updateYonghuPassword" parameterType="yonghu" >
+		update yonghu
+			<set> 
+				<if test="y_newpassword != null and y_newpassword != ''">y_password=#{y_newpassword}</if> 
+			</set>
+			<where>
+				<if test="y_id !=null and y_id !=''">
+					y_id=#{y_id}
+				</if>
+			</where>
+	</update>
+	<!-- 根据用户名和用户密码查询用户数据 -->
+	  
+	<select id="selectYonghuByY_name" parameterType="yonghu" resultType="yonghu">
+		select * from yonghu
+		<where>
+			<if test="y_name !=null and y_name !=''">y_name=#{y_name}</if>
+		</where>
+	</select>
+</mapper>
