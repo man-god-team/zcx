@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.crm.dao.RolesMapper">
+ 
+<sql id="whl">
+	<where>
+		<if test="r_name != null and r_name !=''">r_name like "%"#{r_name}"%"</if> 
+	</where>
+
+</sql>
+ 
+	<!-- 按条件分页查询角色数据信息 -->
+	<select id="selectRolesAll" parameterType="fenye" resultType="roles">
+		SELECT r_id,r_name
+		 FROM Roles
+		 <include refid="whl"></include>
+		 limit #{page},#{pageSize}
+	</select>
+	<!-- 查询角色数据信息总条数  -->
+	<select id="selectRolesCount"   resultType="_int">
+		SELECT count(r_id) FROM Roles
+		 <include refid="whl"></include>
+	</select>
+	<!--查询所有用户信息集合  -->
+		<select id="selectRolesAllByName" parameterType="roles" resultType="_int">
+			SELECT count(r_id)	FROM Roles 
+			where r_name =#{r_name}
+			 
+	</select>
+	<!-- 删除角色信息 -->
+	<delete id="deleteRoles" parameterType="roles">
+		delete from Roles
+			<where>
+				<if test="r_id !=null and r_id !=''">
+					r_id=#{r_id}
+				</if>
+			</where>
+	</delete>
+	 
+	<!--修改角色信息  -->
+	<update id="updateRoles" parameterType="roles">
+		update Roles
+			<set>
+				<if test="r_name != null and r_name !=''">r_name=#{r_name}</if>
+			</set>
+			<where>
+				<if test="r_id !=null and r_id !=''">
+					r_id=#{r_id}
+				</if>
+			</where>
+	</update> 
+	<!-- 新增角色信息 -->
+	<insert id="insertRoles" parameterType="roles">
+		insert into Roles(r_name)
+		values(#{r_name})
+	</insert>
+	<!-- 根据角色id查询模块信息 -->
+	<select id="selectModel" resultType="model">
+		SELECT m_id,m_name,m_parentId,m_path,m_weight,m_weitghtDescribe,m_ops
+		 FROM Model
+	</select>
+	<!-- 根据父节点查询模块总条数 --> 
+	<select id="selectModulByM_parentId" parameterType="_int" resultType="_int">
+		select count(*) from model
+			 where  m_parentId=#{m_parentId} 
+			 
+	</select>
+	
+	  <!-- 遍历新增角色模块信息 --> 
+	<insert id="insertRoleModule" parameterType="list">
+	INSERT INTO modelroles(r_id,m_id) VALUES
+		<foreach collection="list" item="item" open="(" separator="),(" close=")">
+		#{item.r_id},#{item.m_id}
+		</foreach>
+	</insert>
+	
+	 <!--  删除角色模块信息 -->
+	 <delete id="deleteRoleModule" parameterType="_int">
+	 	delete from modelroles
+	 	<where>
+	 		<if test="r_id !=null and r_id !=''"> r_id=#{r_id}</if>
+	 	</where> 
+	 </delete>
+	  <!-- 根据角色id和模块id查询数据总条数 -->
+	 
+	<select id="selectRoleModulByR_idAndM_id" parameterType="modelroles" resultType="_int">
+		select count(*) from modelroles
+			<where>
+				<if test="r_id !=null and r_id !=''">
+					and r_id=#{r_id}
+				</if>
+				<if test="m_id !=null and m_id !=''">
+				and	m_id=#{m_id}
+				</if>
+			</where>
+	</select>
+	<!--  查询登录成功时 的登录人角色 -->  
+	<select id="selectRolesByY_id" parameterType="yonghu" resultType="_int">
+	select COUNT(r.r_id)
+	FROM yonghu y,yonghujuese yj,roles r
+	WHERE y.y_id=yj.y_id and yj.r_id=r.r_id
+	 and (r.r_name="管理员" or  r.r_name="咨询师经理") and y.y_id=#{y_id}
+	 
+	</select>
+	
+	<!-- 删除角色判定条件 
+	 * 用户角色表中存在角色id的不能够删除
+	 * 模块角色表中存在角色id的不能够删除 --> 
+	
+	<select id="selectYonghuRolesByR_id" parameterType="roles" resultType="_int">
+			select count(*) 	FROM yonghujuese
+		<where>
+	 		<if test="r_id !=null and r_id !=''"> r_id=#{r_id}</if>
+	 	</where>
+
+	</select>
+	<select id="selectModelRolesByR_id" parameterType="roles" resultType="_int">
+			
+		SELECT count(*) 	FROM modelroles  
+		<where>
+	 		<if test="r_id !=null and r_id !=''"> r_id=#{r_id}</if>
+	 	</where>
+	</select>
+</mapper>
